@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import SocialButton from "./social-button";
 import Seperator from "./seperator";
 import { login } from "@/actions/login";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
 type TComponentProps = {
   changeVariant: () => void;
@@ -89,6 +91,8 @@ const LoginForm: React.FC<TComponentProps> = ({ changeVariant }) => {
                 </FormItem>
               )}
             />
+            <FormError message="Incorrect credentials" />
+            <FormSuccess message="" />
             <Button
               disabled={isPending}
               type="submit"

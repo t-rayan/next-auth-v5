@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import * as z from "zod";
 import {
   Form,
@@ -18,12 +18,17 @@ import { RegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SocialButton from "./social-button";
 import Seperator from "./seperator";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { register } from "@/actions/register";
 
 type TComponentProps = {
   changeVariant: () => void;
 };
 
 const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
+  const [isPending, startTransition] = useTransition();
+
   // creating a form using useForm hook
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -37,7 +42,9 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
   function onSubmit(values: z.infer<typeof RegisterSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    startTransition(() => {
+      register(values);
+    });
   }
   return (
     <div className="bg-transparent w-full md:w-[28rem] px-5">
@@ -48,7 +55,7 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
 
       <div className=" border-[1px] px-5 py-5 rounded-lg">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="name"
@@ -56,7 +63,12 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
                 <FormItem>
                   <FormLabel>Full name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your full name" {...field} />
+                    <Input
+                      type="text"
+                      disabled={isPending}
+                      placeholder="Enter your full name"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -72,6 +84,7 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
                   <FormControl>
                     <Input
                       type="email"
+                      disabled={isPending}
                       placeholder="Enter your email"
                       {...field}
                     />
@@ -91,6 +104,7 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
                   <FormControl>
                     <Input
                       type="password"
+                      disabled={isPending}
                       placeholder="Enter your password"
                       {...field}
                     />
@@ -101,7 +115,14 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
               )}
             />
 
-            <Button type="submit" size={"lg"} className="w-full ">
+            <FormError message="" />
+            <FormSuccess message="Email sent!!" />
+            <Button
+              disabled={isPending}
+              type="submit"
+              size={"lg"}
+              className="w-full "
+            >
               Submit
             </Button>
 
