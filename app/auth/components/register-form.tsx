@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import * as z from "zod";
 import {
   Form,
@@ -28,6 +28,8 @@ type TComponentProps = {
 
 const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
 
   // creating a form using useForm hook
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -42,8 +44,13 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
   function onSubmit(values: z.infer<typeof RegisterSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    setError("");
+    setSuccess("");
     startTransition(() => {
-      register(values);
+      register(values).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
+      });
     });
   }
   return (
@@ -115,8 +122,8 @@ const RegisterForm: React.FC<TComponentProps> = ({ changeVariant }) => {
               )}
             />
 
-            <FormError message="" />
-            <FormSuccess message="Email sent!!" />
+            <FormError message={error} />
+            <FormSuccess message={success} />
             <Button
               disabled={isPending}
               type="submit"
