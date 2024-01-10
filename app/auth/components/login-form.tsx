@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import * as z from "zod";
+
 import {
   Form,
   FormControl,
@@ -21,6 +22,7 @@ import Seperator from "./seperator";
 import { login } from "@/actions/login";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import { useSearchParams } from "next/navigation";
 
 type TComponentProps = {
   changeVariant: () => void;
@@ -29,6 +31,15 @@ type TComponentProps = {
 // main component code
 const LoginForm: React.FC<TComponentProps> = ({ changeVariant }) => {
   const [isPending, startTransition] = useTransition();
+
+  // getting search params from url
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already is used with another provider."
+      : "";
+
+  // local state
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
@@ -98,7 +109,7 @@ const LoginForm: React.FC<TComponentProps> = ({ changeVariant }) => {
                 </FormItem>
               )}
             />
-            <FormError message={error} />
+            <FormError message={error || urlError} />
             <FormSuccess message={success} />
             <Button
               disabled={isPending}

@@ -4,7 +4,8 @@ import React from "react";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 function SocialButton() {
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     signIn("google", {
       callbackUrl: DEFAULT_LOGIN_REDIRECT,
     });

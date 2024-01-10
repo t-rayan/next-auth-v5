@@ -7,7 +7,7 @@ import RegisterForm from "./components/register-form";
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthPage = () => {
-  const [variant, setVariant] = useState<Variant>("REGISTER");
+  const [variant, setVariant] = useState<Variant>("LOGIN");
 
   const handleVariantChange = () => {
     if (variant === "LOGIN") {
