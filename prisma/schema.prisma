@@ -16,8 +16,6 @@ model User {
   password      String?
   accounts      Account[]
   folders       Folder[]
-
-  @@map("users")
 }
 
 model Account {

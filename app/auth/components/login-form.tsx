@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import * as z from "zod";
 import {
   Form,
@@ -29,6 +29,9 @@ type TComponentProps = {
 // main component code
 const LoginForm: React.FC<TComponentProps> = ({ changeVariant }) => {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+
   // creating a form using useForm hook
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -39,8 +42,12 @@ const LoginForm: React.FC<TComponentProps> = ({ changeVariant }) => {
   });
 
   function onSubmit(values: z.infer<typeof LoginSchema>) {
+    setError("");
+    setSuccess("");
     startTransition(() => {
-      login(values);
+      login(values).then((data) => {
+        setError(data?.error);
+      });
     });
   }
   return (
@@ -91,8 +98,8 @@ const LoginForm: React.FC<TComponentProps> = ({ changeVariant }) => {
                 </FormItem>
               )}
             />
-            <FormError message="Incorrect credentials" />
-            <FormSuccess message="" />
+            <FormError message={error} />
+            <FormSuccess message={success} />
             <Button
               disabled={isPending}
               type="submit"
