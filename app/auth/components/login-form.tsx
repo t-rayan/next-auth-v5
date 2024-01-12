@@ -58,7 +58,7 @@ const LoginForm: React.FC<TComponentProps> = ({ changeVariant }) => {
     startTransition(() => {
       login(values).then((data) => {
         setError(data?.error);
-        // setSuccess(data?.success);
+        setSuccess(data?.success);
       });
     });
   }
