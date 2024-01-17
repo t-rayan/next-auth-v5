@@ -13,7 +13,21 @@ export const sendVerificationEmail = async (email: string, token: string) => {
       subject: "Confirm your email",
       html: `<p>Click <a href="${confirmLink}">here<a/> </p>`,
     });
-    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const sendPasswordResetEmail = async (email: string, token: string) => {
+  const resetLink = `http://localhost:3000/auth/new-password?token=${token}`;
+
+  try {
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: email,
+      subject: "Reset your password",
+      html: `<p>Click <a href="${resetLink}">to reset your password.<a/> </p>`,
+    });
   } catch (error) {
     console.log(error);
   }

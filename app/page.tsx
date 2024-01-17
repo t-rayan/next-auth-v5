@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { Lato } from "next/font/google";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const font = Lato({
@@ -25,8 +26,11 @@ export default function Home() {
           Welcome to Tasker
         </h1>
         <div className="mt-8">
-          <Button size={"lg"} onClick={navigateToAuthPage}>
-            Get Started <ChevronRightIcon className="ml-2" />{" "}
+          <Button size={"lg"} asChild>
+            <Link href={"/auth"}>
+              {" "}
+              Get Started <ChevronRightIcon className="ml-2" />{" "}
+            </Link>
           </Button>
         </div>
       </div>
